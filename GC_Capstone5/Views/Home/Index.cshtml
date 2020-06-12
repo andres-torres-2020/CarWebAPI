@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h1>Favorites</h1>
+
+@model List<Favorite>
+
+<table class="table">
+    <tr>
+        <th>Title</th>
+        <th>Genre</th>
+        <th>Release Year</th>
+        <th>Runtime</th>
+        <th>Poster</th>
+    </tr>
+    @foreach (var fav in Model)
+    {
+        <tr>
+            <td>@fav.Title</td>
+            <td>@fav.Overview</td>
+            <td>@fav.ReleaseDate</td>
+            <td>@fav.RunTime</td>
+            <td>@fav.PosterPath</td>
+            <td>
+                <a href="/Movie/DeleteFavorite?id=@fav.Id" class="btn-danger">Delete from Favorites</a>
+            </td>
+
+        </tr>
+    }
+</table>

@@ -1,0 +1,87 @@
+﻿@{
+    ViewData["Title"] = "Search Results";
+}
+
+<h4>Your Search Results</h4>
+
+@model SearchRootobject
+
+@if (Model is null || Model.results == null)
+{
+    <p>No match found!</p>
+}
+else
+{
+    List<SearchResult> searchResults = Model.results.ToList<SearchResult>();
+    int prevPage = Model.page - 1;
+    int nextPage = Model.page + 1;
+
+    <div>
+        <table>
+            <tr class="text-center border-bottom">
+                <th></th>
+                <th></th>
+                <th>TITLE</th>
+                <th>
+                    AVERAGE RATING
+                    <p><small>out of 10</small></p>
+                </th>
+                <th>RELEASE DATE</th>
+                <th> </th>
+                <th> </th>
+            </tr>
+            @foreach (var movie in searchResults)
+            {
+            <tr class="text-center">
+                <td rowspan="3" class="border-bottom"><img src="@movie.poster_path" /></td>
+                <td colspan="2"><b><h5 class="text-info">@movie.title.ToUpper()</h5></b></td>
+                <td>@movie.vote_average</td>
+                <td>
+                    @Convert.ToDateTime(movie.release_date).ToShortDateString()
+                </td>
+                <td> </td>
+                <td rowspan="2">
+                    <a class="btn btn-success" href="/Movie/AddToFavorites?id=@movie.id" value="Add To Favorites">Add To Favorites</a>
+                </td>
+            </tr>
+            <tr class="text-sm-center">
+                <td></td>
+                <td colspan="3"><small>@movie.overview</small></td>
+            </tr>
+            <tr class="border-bottom">
+                <td colspan="6"> </td>
+            </tr>
+            }
+        </table>
+    </div>
+    <br />
+    <div class="center">
+        <table class="table table-borderless">
+            <tr>
+                <td colspan="4"> </td>
+                <td>
+                @if(prevPage > 0)
+                {
+                <form action="/movie/GetMoviesByTitle" method="post">
+                    <input type="hidden" name="keyword" value="@ViewBag.keyword" />
+                    <input type="hidden" name="pageNumber" value="@prevPage" />
+                    <input class="btn btn-info" type="submit" value="Previous" />
+                </form>
+                }
+                </td>
+                <td>
+                @if(nextPage <= Model.total_pages)
+                {
+                <form action="/Movie/GetMoviesByTitle" method="post">
+                    <input type="hidden" name="keyword" value="@ViewBag.keyword" />
+                    <input type="hidden" name="pageNumber" value="@nextPage" />
+                    <input class="btn btn-info" type="submit" value="Next" />
+                </form>
+                }
+                </td>
+                <td colspan="4"> </td>
+            </tr>
+        </table>
+    </div>
+}
+
